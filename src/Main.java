@@ -21,7 +21,7 @@ public class Main {
 
         epic1.createSubTask(sub1);
         epic1.createSubTask(sub2);
-        epic1.createSubTask(sub3);
+        epic2.createSubTask(sub3);
 
 
 
