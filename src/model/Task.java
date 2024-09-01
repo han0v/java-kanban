@@ -3,26 +3,16 @@ package model;
 import java.util.Objects;
 
 public class Task {
-    static int uniqId = 1;
 
     private int id;
-    private String status = Status.NEW.toString();
+    private Status status = Status.NEW;
     protected  String description;
     protected String name;
 
-    public Task(String name, String description) {
+    public Task(int id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        id = uniqId;
-        uniqId++;
-    }
-
-    public static void setUniqId(int id) {
-        uniqId = id;
-    }
-
-    public static int getUniqId() {
-        return uniqId;
     }
 
     public Epic getEpic() {
@@ -45,16 +35,13 @@ public class Task {
         this.name = name;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        if (status.equals(Status.DONE.toString())
-                || status.equals(Status.NEW.toString())
-                || status.equals(Status.IN_PROGRESS.toString())) {
+    public void setStatus(Status status) {
             this.status = status;
-        }
+
     }
 
     public String getDescription() {
@@ -69,9 +56,7 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-        return id == task.id && Objects.equals(status, task.status)
-                && Objects.equals(name, task.name)
-                && Objects.equals(description, task.description);
+        return id == task.id;
     }
 
     @Override

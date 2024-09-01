@@ -1,13 +1,23 @@
 package model;
 
 import java.util.HashMap;
+import service.TaskManager;
+
 
 public class Epic extends Task {
     private final HashMap<Integer, SubTask> subTaskList;
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(int id, String name, String description) {
+        super(id, name, description); // Передаем id в родительский конструктор
         subTaskList = new HashMap<>();
+    }
+
+    public void addSubTask(String name, String description, TaskManager taskManager) {
+        int subTaskId = taskManager.getNextUniqId();
+        SubTask subTask = new SubTask(subTaskId, name, description, this.getId());
+        subTaskList.put(subTaskId, subTask);
+        taskManager.addSubTask(subTask);
+        updateStatus();
     }
 
     public HashMap<Integer, SubTask> getSubTaskList() {
@@ -25,22 +35,29 @@ public class Epic extends Task {
 
     public void updateStatus() {
         if (this.subTaskList.isEmpty()) {
-            if (this.getStatus().equals(Status.NEW.toString())) {
-                this.setStatus(Status.IN_PROGRESS.toString());
-            } else this.setStatus(Status.DONE.toString());
+            this.setStatus(Status.NEW);
         } else {
-            boolean flag = true;
+            boolean allDone = true;
+            boolean allNew = true;
+
             for (SubTask sub : subTaskList.values()) {
-                if (!sub.getStatus().equals(Status.DONE.toString())) {
-                    flag = false;
+                if (!sub.getStatus().equals(Status.DONE)) {
+                    allDone = false;
                 }
-                if (sub.getStatus().equals(Status.IN_PROGRESS.toString())) {
-                    this.setStatus(Status.IN_PROGRESS.toString());
-                    flag = false;
-                    break;
+                if (!sub.getStatus().equals(Status.NEW)) {
+                    allNew = false;
                 }
             }
-            if (flag) this.setStatus(Status.DONE.toString());
+
+            if (allNew) {
+                this.setStatus(Status.NEW);
+            } else if (allDone) {
+                this.setStatus(Status.DONE);
+            } else {
+                this.setStatus(Status.IN_PROGRESS);
+            }
         }
     }
 }
+
+
