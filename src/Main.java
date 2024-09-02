@@ -39,7 +39,7 @@ public class Main {
 
         System.out.println("Обновление задачи TASK");
         task1.setDescription("Помыть щётку");
-        taskManager.updateTask(task1, Status.NEW);
+        taskManager.updateTask(task1);
         displayCurrentState(taskManager);
 
 

@@ -6,8 +6,8 @@ public class Task {
 
     private int id;
     private Status status = Status.NEW;
-    protected  String description;
-    protected String name;
+    private  String description;
+    private String name;
 
     public Task(int id, String name, String description) {
         this.id = id;

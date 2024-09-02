@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+
 import service.TaskManager;
 
 
@@ -12,14 +13,6 @@ public class Epic extends Task {
         subTaskList = new HashMap<>();
     }
 
-    public void addSubTask(String name, String description, TaskManager taskManager) {
-        int subTaskId = taskManager.getNextUniqId();
-        SubTask subTask = new SubTask(subTaskId, name, description, this.getId());
-        subTaskList.put(subTaskId, subTask);
-        taskManager.addSubTask(subTask);
-        updateStatus();
-    }
-
     public HashMap<Integer, SubTask> getSubTaskList() {
         return subTaskList;
     }
@@ -27,10 +20,6 @@ public class Epic extends Task {
     public void createSubTask(SubTask sub) {
         subTaskList.put(sub.getId(), sub);
         sub.setEpicId(this.getId());
-    }
-
-    public HashMap<Integer, SubTask> getAllSubTask() {
-        return subTaskList;
     }
 
     public void updateStatus() {
@@ -58,6 +47,7 @@ public class Epic extends Task {
             }
         }
     }
+
     @Override
     public String toString() {
         return "Epic{" +
