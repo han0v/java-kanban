@@ -25,14 +25,11 @@ public class Main {
         SubTask sub3 = new SubTask("Сделать домашнее задание", "До воскресенья", epic1.getId());
 
 
-
-
         taskManager.createSubTask(sub1);
         taskManager.createSubTask(sub2);
         taskManager.createSubTask(sub3);
 
         displayCurrentState(taskManager);
-
 
 
         System.out.println("Обновление задачи TASK");
@@ -51,7 +48,6 @@ public class Main {
         displayCurrentState(taskManager);
 
 
-
         System.out.println("Получение задачи по ID:");
         System.out.println(taskManager.getById(4));
         System.out.println(taskManager.getById(7));
@@ -61,8 +57,6 @@ public class Main {
         System.out.println(taskManager.getById(6));
         System.out.println(taskManager.getById(3));
         System.out.println();
-
-
 
 
         displayCurrentState(taskManager);

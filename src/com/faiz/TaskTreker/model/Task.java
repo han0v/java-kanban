@@ -6,7 +6,7 @@ public class Task {
 
     private int id;
     private Status status = Status.NEW;
-    private  String description;
+    private String description;
     private String name;
 
     public Task(String name, String description) {
@@ -39,7 +39,7 @@ public class Task {
     }
 
     public void setStatus(Status status) {
-            this.status = status;
+        this.status = status;
 
     }
 
