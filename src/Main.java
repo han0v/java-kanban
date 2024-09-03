@@ -1,34 +1,32 @@
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
-import service.TaskManager;
+import com.faiz.TaskTreker.model.Epic;
+import com.faiz.TaskTreker.model.SubTask;
+import com.faiz.TaskTreker.model.Task;
+import com.faiz.TaskTreker.model.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
 
-        Task task1 = new Task(taskManager.getNextUniqId(), "Почистить зубы", "Тщательно");
-        Task task2 = new Task(taskManager.getNextUniqId(), "Побриться", "Основательно");
-
-        Epic epic1 = new Epic(taskManager.getNextUniqId(), "Переезд", "В новый дом");
-        Epic epic2 = new Epic(taskManager.getNextUniqId(), "Учёба", "Изучаем JAVA");
-
-        // Создание подзадач для первого эпика
-        SubTask sub1 = new SubTask(taskManager.getNextUniqId(), "Собрать все коробки", "Да, да... Все коробочки!", epic1.getId());
-        SubTask sub2 = new SubTask(taskManager.getNextUniqId(), "Упаковать кошку", "Прощаемся с кошкой!", epic1.getId());
-        SubTask sub3 = new SubTask(taskManager.getNextUniqId(), "Сделать домашнее задание", "До воскресенья", epic1.getId());
-
-        epic1.createSubTask(sub1);
-        epic1.createSubTask(sub2);
-        epic2.createSubTask(sub3);
-
-
-
+        Task task1 = new Task("Почистить зубы", "Тщательно");
+        Task task2 = new Task("Побриться", "Основательно");
         taskManager.createTask(task1);
         taskManager.createTask(task2);
+
+        Epic epic1 = new Epic("Переезд", "В новый дом");
+        Epic epic2 = new Epic("Учёба", "Изучаем JAVA");
+
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
+
+
+        // Создание подзадач для первого эпика
+        SubTask sub1 = new SubTask("Собрать все коробки", "Да, да... Все коробочки!", epic1.getId());
+        SubTask sub2 = new SubTask("Упаковать кошку", "Прощаемся с кошкой!", epic1.getId());
+        SubTask sub3 = new SubTask("Сделать домашнее задание", "До воскресенья", epic1.getId());
+
+
+
+
         taskManager.createSubTask(sub1);
         taskManager.createSubTask(sub2);
         taskManager.createSubTask(sub3);
@@ -67,20 +65,12 @@ public class Main {
 
 
 
-        System.out.println("Список задач:");
-        System.out.println(taskManager.getTasks());
-        System.out.println("Список подзадач:");
-        System.out.println(taskManager.getSubTasks());
-        System.out.println("Список эпиков:");
-        System.out.println(taskManager.getEpics());
+        displayCurrentState(taskManager);
         System.out.println("Удаление задачи по id: " + 3 + " и " + 1 + ". А так же несуществующий id: " + 32);
         taskManager.delById(32);
         taskManager.delById(3);
         taskManager.delById(1);
 
-        displayCurrentState(taskManager);
-
-        System.out.println("Очистка трекера задач");
         displayCurrentState(taskManager);
     }
 

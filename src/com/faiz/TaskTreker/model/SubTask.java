@@ -1,11 +1,11 @@
-package model;
+package com.faiz.TaskTreker.model;
 
 public class SubTask extends Task {
 
     private int epicId;
 
-    public SubTask(int id, String name, String description, int epicId) {
-        super(id, name, description);
+    public SubTask(String name, String description, int epicId) {
+        super(name, description);
         this.epicId = epicId;
     }
 

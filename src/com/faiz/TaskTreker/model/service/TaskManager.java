@@ -1,24 +1,17 @@
-package service;
+package com.faiz.TaskTreker.model.service;
 
-import model.Epic;
-import model.Status;
-import model.SubTask;
-import model.Task;
+import com.faiz.TaskTreker.model.Epic;
+import com.faiz.TaskTreker.model.SubTask;
+import com.faiz.TaskTreker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
     private int uniqId = 1;
-
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-
-    public int getNextUniqId() {
-        return uniqId++;
-    }
-
 
     public Task getTaskById(int id) {
         return tasks.get(id);
@@ -99,12 +92,10 @@ public class TaskManager {
         if (subTasks.isEmpty()) {
             System.out.println("Список подзадач пуст!");
         } else {
-            // Очищаем список подзадач в каждом эпике
             for (Epic epic : epics.values()) {
                 epic.getSubTaskList().clear();
                 epic.updateStatus();
             }
-
             subTasks.clear();
             System.out.println("Список подзадач очищен!");
         }
@@ -126,12 +117,14 @@ public class TaskManager {
 
 
     public void createTask(Task task) {
+        task.setId(getNextUniqId());
         tasks.put(task.getId(), task);
         System.out.println("Задача с ID " + task.getId() + " добавлена.");
     }
 
     // Метод для создания эпика
     public void createEpic(Epic epic) {
+        epic.setId(getNextUniqId());
         epics.put(epic.getId(), epic);
         System.out.println("Эпик с ID " + epic.getId() + " добавлен.");
     }
@@ -139,11 +132,12 @@ public class TaskManager {
     // Метод для создания подзадачи
     public void createSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getEpicId())) {
+            subTask.setId(getNextUniqId());
             subTasks.put(subTask.getId(), subTask);
             Epic epic = epics.get(subTask.getEpicId());
             epic.createSubTask(subTask);
             epic.updateStatus();
-            System.out.println("Подзадача с ID " + subTask.getId() + " добавлена к эпике с ID " + epic.getId());
+            System.out.println("Подзадача с ID " + subTask.getId() + " добавлена к эпику с ID " + epic.getId());
         } else {
             System.out.println("Ошибка: Эпик с ID " + subTask.getEpicId() + " не найден.");
         }
@@ -217,6 +211,10 @@ public class TaskManager {
         } else {
             return null;
         }
+    }
+
+    private int getNextUniqId() {
+        return uniqId++;
     }
 
 }

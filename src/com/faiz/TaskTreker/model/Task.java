@@ -1,4 +1,4 @@
-package model;
+package com.faiz.TaskTreker.model;
 
 import java.util.Objects;
 
@@ -9,8 +9,7 @@ public class Task {
     private  String description;
     private String name;
 
-    public Task(int id, String name, String description) {
-        this.id = id;
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
     }

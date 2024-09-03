@@ -1,15 +1,13 @@
-package model;
+package com.faiz.TaskTreker.model;
 
 import java.util.HashMap;
-
-import service.TaskManager;
 
 
 public class Epic extends Task {
     private final HashMap<Integer, SubTask> subTaskList;
 
-    public Epic(int id, String name, String description) {
-        super(id, name, description); // Передаем id в родительский конструктор
+    public Epic(String name, String description) {
+        super(name, description);
         subTaskList = new HashMap<>();
     }
 
