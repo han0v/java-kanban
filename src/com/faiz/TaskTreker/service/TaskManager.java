@@ -1,4 +1,4 @@
-package com.faiz.TaskTreker.model.service;
+package com.faiz.TaskTreker.service;
 
 import com.faiz.TaskTreker.model.Epic;
 import com.faiz.TaskTreker.model.SubTask;
