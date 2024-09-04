@@ -1,7 +1,7 @@
-import com.faiz.TaskTreker.model.Epic;
-import com.faiz.TaskTreker.model.SubTask;
-import com.faiz.TaskTreker.model.Task;
-import com.faiz.TaskTreker.service.TaskManager;
+import com.faiz.tasktreker.model.Epic;
+import com.faiz.tasktreker.model.SubTask;
+import com.faiz.tasktreker.model.Task;
+import com.faiz.tasktreker.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {

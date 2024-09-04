@@ -1,4 +1,4 @@
-package com.faiz.TaskTreker.model;
+package com.faiz.tasktreker.model;
 
 import java.util.Objects;
 
@@ -12,10 +12,6 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Epic getEpic() {
-        return null;
     }
 
     public Integer getId() {

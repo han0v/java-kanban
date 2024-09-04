@@ -1,8 +1,8 @@
-package com.faiz.TaskTreker.service;
+package com.faiz.tasktreker.service;
 
-import com.faiz.TaskTreker.model.Epic;
-import com.faiz.TaskTreker.model.SubTask;
-import com.faiz.TaskTreker.model.Task;
+import com.faiz.tasktreker.model.Epic;
+import com.faiz.tasktreker.model.SubTask;
+import com.faiz.tasktreker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,14 +122,12 @@ public class TaskManager {
         System.out.println("Задача с ID " + task.getId() + " добавлена.");
     }
 
-    // Метод для создания эпика
     public void createEpic(Epic epic) {
         epic.setId(getNextUniqId());
         epics.put(epic.getId(), epic);
         System.out.println("Эпик с ID " + epic.getId() + " добавлен.");
     }
 
-    // Метод для создания подзадачи
     public void createSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getEpicId())) {
             subTask.setId(getNextUniqId());
@@ -152,6 +150,16 @@ public class TaskManager {
             oldTask.setStatus(task.getStatus());
         } else {
             System.out.println("Задача не найдена!");
+        }
+    }
+
+    public void updateEpic(Epic epic) {
+        final Epic existingEpic = epics.get(epic.getId());
+        if (existingEpic != null) {
+            existingEpic.setName(epic.getName());
+            existingEpic.setDescription(epic.getDescription());
+        } else {
+            System.out.println("Эпик не найден!");
         }
     }
 
@@ -178,11 +186,9 @@ public class TaskManager {
 
         if (epics.containsKey(id)) {
             Epic epic = epics.remove(id);
-            // Удаляем все подзадачи, связанные с этим эпиком
-            subTasks.keySet().removeIf(subTaskId -> {
-                SubTask subTask = subTasks.get(subTaskId);
-                return subTask != null && subTask.getEpicId() == epic.getId();
-            });
+            for (SubTask subTask : epic.getSubTaskList().values()) {
+                subTasks.remove(subTask.getId());
+            }
             System.out.println("Эпик с ID " + id + " и его подзадачи удалены.");
             return;
         }

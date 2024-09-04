@@ -1,4 +1,4 @@
-package com.faiz.TaskTreker.model;
+package com.faiz.tasktreker.model;
 
 public enum Status {
     NEW,
