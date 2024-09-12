@@ -14,11 +14,11 @@ public interface TaskManager {
 
     SubTask getSubTaskById(int id);
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<SubTask> getSubTasks();
+    List<SubTask> getSubTasks();
 
     void delAll();
 
@@ -46,7 +46,6 @@ public interface TaskManager {
 
     ArrayList<SubTask> getSubTaskList(int epicId);
 
-    int getNextUniqId();
 
     List<Task> getHistory();
 }

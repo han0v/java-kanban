@@ -1,4 +1,4 @@
-package service;
+package com.faiz.tasktreker.service;
 
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
@@ -37,5 +37,18 @@ class HistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
         assertNotNull(history);
         assertEquals(1, history.size());
+    }
+
+    @Test
+    void add_limitsHistorySizeToTen() {
+        // Добавляем 15 задач в историю
+        for (int i = 1; i <= 15; i++) {
+            Task newTask = new Task("Test description " + i, "TestTask " + i);
+            newTask.setId(i);
+            historyManager.add(newTask);
+        }
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(10, history.size());
     }
 }

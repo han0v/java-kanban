@@ -1,4 +1,4 @@
-package model;
+package com.faiz.tasktreker.model;
 
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.Status;

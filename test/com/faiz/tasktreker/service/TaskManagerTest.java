@@ -1,4 +1,4 @@
-package service;
+package com.faiz.tasktreker.service;
 
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.Status;
@@ -32,7 +32,7 @@ abstract class TaskManagersTest<T extends TaskManager> {
         Task savedTask = manager.getTaskById(task.getId());
         assertNotNull(savedTask, "Task not found.");
         assertEquals(task, savedTask, "Tasks are not equal.");
-        final ArrayList<Task> tasks = manager.getTasks();
+        final List<Task> tasks = manager.getTasks();
         assertNotNull(tasks, "List is empty.");
         assertEquals(1, tasks.size(), "Wrong quantity of tasks.");
         ;
@@ -44,7 +44,7 @@ abstract class TaskManagersTest<T extends TaskManager> {
         manager.createSubTask(subTask);
         final Epic savedEpic = manager.getEpicById(epic.getId());
         assertNotNull(savedEpic, "Task not found.");
-        final ArrayList<Epic> epics = manager.getEpics();
+        final List<Epic> epics = manager.getEpics();
         assertNotNull(epics, "List is empty.");
         assertEquals(1, epics.size(), "Wrong quantity of tasks.");
     }

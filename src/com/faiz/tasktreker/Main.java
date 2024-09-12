@@ -5,10 +5,11 @@ import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
 import com.faiz.tasktreker.service.InMemoryTaskManager;
 import com.faiz.tasktreker.service.Managers;
+import com.faiz.tasktreker.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager taskManager = (InMemoryTaskManager) Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
 
         Task task1 = new Task("Почистить зубы", "Тщательно");
         Task task2 = new Task("Побриться", "Основательно");
@@ -71,7 +72,7 @@ public class Main {
         displayCurrentState(taskManager);
     }
 
-    private static void displayCurrentState(InMemoryTaskManager taskManager) {
+    private static void displayCurrentState(TaskManager taskManager) {
         System.out.println("Список задач:");
         System.out.println(taskManager.getTasks());
         System.out.println("Список эпиков:");
