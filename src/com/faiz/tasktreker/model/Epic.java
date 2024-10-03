@@ -1,17 +1,18 @@
 package com.faiz.tasktreker.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class Epic extends Task {
-    private final HashMap<Integer, SubTask> subTaskList;
+    private final Map<Integer, SubTask> subTaskList;
 
     public Epic(String name, String description) {
         super(name, description);
         subTaskList = new HashMap<>();
     }
 
-    public HashMap<Integer, SubTask> getSubTaskList() {
+    public Map<Integer, SubTask> getSubTaskList() {
         return subTaskList;
     }
 

@@ -40,8 +40,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void add_limitsHistorySizeToTen() {
-        // Добавляем 15 задач в историю
+    void add_HistorySize() {
         for (int i = 1; i <= 15; i++) {
             Task newTask = new Task("Test description " + i, "TestTask " + i);
             newTask.setId(i);
@@ -49,6 +48,18 @@ class HistoryManagerTest {
         }
 
         final List<Task> history = historyManager.getHistory();
-        assertEquals(10, history.size());
+        assertEquals(15, history.size());
     }
+
+    @Test
+    void remove_TaskFromHistory() {
+        historyManager.add(task);
+        historyManager.remove(task.getId());
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления задачи.
+    }
+
+
+
 }
