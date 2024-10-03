@@ -1,20 +1,12 @@
 package com.faiz.tasktreker.service;
 
 import com.faiz.tasktreker.model.Epic;
-import com.faiz.tasktreker.model.Status;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.faiz.tasktreker.service.HistoryManager;
-import com.faiz.tasktreker.service.InMemoryHistoryManager;
-import com.faiz.tasktreker.service.TaskManager;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

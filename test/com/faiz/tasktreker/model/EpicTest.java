@@ -1,15 +1,8 @@
 package com.faiz.tasktreker.model;
 
-import com.faiz.tasktreker.model.Epic;
-import com.faiz.tasktreker.model.Status;
-import com.faiz.tasktreker.model.SubTask;
-import com.faiz.tasktreker.service.InMemoryTaskManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
 
