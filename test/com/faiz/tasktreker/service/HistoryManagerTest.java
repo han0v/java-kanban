@@ -3,8 +3,6 @@ package com.faiz.tasktreker.service;
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.service.HistoryManager;
-import com.faiz.tasktreker.service.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
