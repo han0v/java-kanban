@@ -5,6 +5,7 @@ import com.faiz.tasktreker.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
@@ -20,10 +21,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    HashMap<Integer, Node<Task>> history = new HashMap<>();
-
-    Node<Task> first;
-    Node<Task> last;
+    private Map<Integer, Node<Task>> history = new HashMap<>();
+    private Node<Task> first;
+    private Node<Task> last;
 
     @Override
     public void add(Task task) {
@@ -36,35 +36,31 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node<Task> node = history.get(id);
-        if (node != null) { // Защита от null указателя
-            removeNode(node);
-            history.remove(id);
-        }
+        removeNode(history.remove(id));
     }
 
     @Override
     public List<Task> getHistory() {
-        return new ArrayList<>(getTasks());
+        return getTasks();
     }
 
     void linkLast(Task task) {
-        final Node<Task> l = last;
-        final Node<Task> newNode = new Node<>(l, task, null);
+        final Node<Task> latest = last;
+        final Node<Task> newNode = new Node<>(latest, task, null);
         last = newNode;
-        if (l == null) {
+        if (latest == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            latest.next = newNode;
         }
         history.put(task.getId(), newNode);
     }
 
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> returnList = new ArrayList<>();
-        Node<Task> current = first; // Указывайте на Node<Task>
+        ArrayList<Task> returnList = new ArrayList<>(history.size());
+        Node<Task> current = first;
         while (current != null) {
-            returnList.add(current.elem); // Добавляй элемент, а не узел
+            returnList.add(current.elem);
             current = current.next;
         }
         return returnList;
