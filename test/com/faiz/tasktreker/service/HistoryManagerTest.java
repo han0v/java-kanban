@@ -17,9 +17,11 @@ class HistoryManagerTest {
     Task task;
     Epic epic;
     SubTask subTask;
+    private InMemoryTaskManager taskManager;
 
     @BeforeEach
     void beforeEach() {
+        taskManager = new InMemoryTaskManager();
 
         task = new Task("Test description", "TestTask");
         task.setId(1);
@@ -58,5 +60,39 @@ class HistoryManagerTest {
         assertEquals(0, history.size()); // Проверка, что история пуста после удаления задачи.
     }
 
+    @Test
+    void add_Duplicates() {
+        historyManager.add(task);
+        historyManager.add(task);
+        historyManager.add(task);
 
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size()); // Проверка, что история содержит только одну запись
+        assertEquals(task, history.get(0)); // Проверка, что это именно та задача, которую добавляли
+    }
+
+    @Test
+    void remove_TaskAndEpic() {
+        taskManager.createTask(task);
+        taskManager.createEpic(epic);
+        taskManager.getTaskById(task.getId());
+        taskManager.getEpicById(epic.getId());
+        taskManager.delAll();
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления и задачи и эпика
+    }
+
+    @Test
+    void remove_TaskAndSubTaskFromHistory() {
+
+        historyManager.add(task);
+        historyManager.add(subTask);
+
+        historyManager.remove(subTask.getId());
+        historyManager.remove(task.getId());
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления и задачи и подзадачи
+    }
 }
