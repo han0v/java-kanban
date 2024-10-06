@@ -80,70 +80,58 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         if (!taskEmpty) {
-            for (Integer taskId : new ArrayList<>(tasks.keySet())) {
+            for (Integer taskId : tasks.keySet()) {
                 historyManager.remove(taskId);
             }
             tasks.clear();
             System.out.println("Список задач очищен!");
-        } else {
-            System.out.println("Список задач пуст!");
         }
         if (!epicEmpty) {
             for (Epic epic : epics.values()) {
                 for (SubTask subTask : epic.getSubTaskList().values()) {
                     historyManager.remove(subTask.getId());
                 }
-            }
-            for (Integer epicId : new ArrayList<>(epics.keySet())) {
-                historyManager.remove(epicId);
+                historyManager.remove(epic.getId());
             }
             epics.clear();
             System.out.println("Список эпиков очищен!");
-        } else {
-            System.out.println("Список эпиков пуст!");
         }
         if (!subTaskEmpty) {
-            for (Integer subTaskId : new ArrayList<>(subTasks.keySet())) {
+            for (Integer subTaskId : subTasks.keySet()) {
                 historyManager.remove(subTaskId);
             }
             subTasks.clear();
             System.out.println("Список подзадач очищен!");
-        } else {
-            System.out.println("Список подзадач пуст!");
         }
     }
 
     @Override
     public void delAllTasks() {
-        boolean taskEmpty = tasks.isEmpty();
-        if (!taskEmpty) {
-            for (Integer taskId : new ArrayList<>(tasks.keySet())) {
+        if (tasks.isEmpty()) {
+            System.out.println("Список задач пуст!");
+        } else {
+            for (Integer taskId : tasks.keySet()) {
                 historyManager.remove(taskId);
             }
             tasks.clear();
             System.out.println("Список задач очищен!");
-        } else {
-            System.out.println("Список задач пуст!");
         }
     }
 
     @Override
     public void delAllEpics() {
-        boolean epicEmpty = epics.isEmpty();
-        if (!epicEmpty) {
+        if (epics.isEmpty()) {
+            System.out.println("Список эпиков пуст!");
+        } else {
             for (Epic epic : epics.values()) {
                 for (SubTask subTask : epic.getSubTaskList().values()) {
                     historyManager.remove(subTask.getId());
                 }
-            }
-            for (Integer epicId : epics.keySet()) {
-                historyManager.remove(epicId);
+                historyManager.remove(epic.getId());
             }
             epics.clear();
             subTasks.clear();
             System.out.println("Список эпиков очищен!");
-        } else {
-            System.out.println("Список эпиков пуст!");
         }
     }
 
@@ -258,7 +246,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void delById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
-            historyManager.remove(id); //удаление таксков из истории
+            historyManager.remove(id);
             System.out.println("Задача с ID " + id + " удалена.");
             return;
         }
