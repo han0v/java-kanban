@@ -3,7 +3,6 @@ package com.faiz.tasktreker;
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.service.InMemoryTaskManager;
 import com.faiz.tasktreker.service.Managers;
 import com.faiz.tasktreker.service.TaskManager;
 
@@ -32,7 +31,6 @@ public class Main {
         taskManager.createSubTask(sub1);
         taskManager.createSubTask(sub2);
         taskManager.createSubTask(sub3);
-
         displayCurrentState(taskManager);
 
 

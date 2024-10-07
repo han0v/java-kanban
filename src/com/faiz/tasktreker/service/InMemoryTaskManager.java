@@ -80,53 +80,70 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         if (!taskEmpty) {
+            for (Integer taskId : tasks.keySet()) {
+                historyManager.remove(taskId);
+            }
             tasks.clear();
             System.out.println("Список задач очищен!");
-        } else {
-            System.out.println("Список задач пуст!");
         }
         if (!epicEmpty) {
+            for (Epic epic : epics.values()) {
+                for (SubTask subTask : epic.getSubTaskList().values()) {
+                    historyManager.remove(subTask.getId());
+                }
+                historyManager.remove(epic.getId());
+            }
             epics.clear();
             System.out.println("Список эпиков очищен!");
-        } else {
-            System.out.println("Список эпиков пуст!");
         }
         if (!subTaskEmpty) {
+            for (Integer subTaskId : subTasks.keySet()) {
+                historyManager.remove(subTaskId);
+            }
             subTasks.clear();
             System.out.println("Список подзадач очищен!");
-        } else {
-            System.out.println("Список подзадач пуст!");
         }
     }
 
     @Override
     public void delAllTasks() {
-        boolean taskEmpty = tasks.isEmpty();
-        if (!taskEmpty) {
+        if (tasks.isEmpty()) {
+            System.out.println("Список задач пуст!");
+        } else {
+            for (Integer taskId : tasks.keySet()) {
+                historyManager.remove(taskId);
+            }
             tasks.clear();
             System.out.println("Список задач очищен!");
-        } else {
-            System.out.println("Список задач пуст!");
         }
     }
 
     @Override
     public void delAllEpics() {
-        boolean epicEmpty = epics.isEmpty();
-        if (!epicEmpty) {
+        if (epics.isEmpty()) {
+            System.out.println("Список эпиков пуст!");
+        } else {
+            for (Epic epic : epics.values()) {
+                for (SubTask subTask : epic.getSubTaskList().values()) {
+                    historyManager.remove(subTask.getId());
+                }
+                historyManager.remove(epic.getId());
+            }
             epics.clear();
             subTasks.clear();
             System.out.println("Список эпиков очищен!");
-        } else {
-            System.out.println("Список эпиков пуст!");
         }
     }
+
 
     @Override
     public void delAllSubTasks() {
         if (subTasks.isEmpty()) {
             System.out.println("Список подзадач пуст!");
         } else {
+            for (SubTask subTask : subTasks.values()) {
+                historyManager.remove(subTask.getId());
+            }
             for (Epic epic : epics.values()) {
                 epic.getSubTaskList().clear();
                 epic.updateStatus();
@@ -229,6 +246,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void delById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(id);
             System.out.println("Задача с ID " + id + " удалена.");
             return;
         }
@@ -237,7 +255,9 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.remove(id);
             for (SubTask subTask : epic.getSubTaskList().values()) {
                 subTasks.remove(subTask.getId());
+                historyManager.remove(subTask.getId());
             }
+            historyManager.remove(id);
             System.out.println("Эпик с ID " + id + " и его подзадачи удалены.");
             return;
         }
@@ -248,6 +268,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (parentEpic != null) {
                 parentEpic.getSubTaskList().remove(subTask.getId());
                 parentEpic.updateStatus();
+                historyManager.remove(id);
                 System.out.println("Подзадача с ID " + id + " удалена из эпика.");
             } else {
                 System.out.println("Эпик для подзадачи с ID " + id + " не найден.");

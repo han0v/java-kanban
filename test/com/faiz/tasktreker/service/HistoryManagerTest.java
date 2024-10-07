@@ -3,8 +3,6 @@ package com.faiz.tasktreker.service;
 import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.service.HistoryManager;
-import com.faiz.tasktreker.service.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +17,11 @@ class HistoryManagerTest {
     Task task;
     Epic epic;
     SubTask subTask;
+    private InMemoryTaskManager taskManager;
 
     @BeforeEach
     void beforeEach() {
+        taskManager = new InMemoryTaskManager();
 
         task = new Task("Test description", "TestTask");
         task.setId(1);
@@ -40,8 +40,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void add_limitsHistorySizeToTen() {
-        // Добавляем 15 задач в историю
+    void add_HistorySize() {
         for (int i = 1; i <= 15; i++) {
             Task newTask = new Task("Test description " + i, "TestTask " + i);
             newTask.setId(i);
@@ -49,6 +48,51 @@ class HistoryManagerTest {
         }
 
         final List<Task> history = historyManager.getHistory();
-        assertEquals(10, history.size());
+        assertEquals(15, history.size());
+    }
+
+    @Test
+    void remove_TaskFromHistory() {
+        historyManager.add(task);
+        historyManager.remove(task.getId());
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления задачи.
+    }
+
+    @Test
+    void add_Duplicates() {
+        historyManager.add(task);
+        historyManager.add(task);
+        historyManager.add(task);
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size()); // Проверка, что история содержит только одну запись
+        assertEquals(task, history.get(0)); // Проверка, что это именно та задача, которую добавляли
+    }
+
+    @Test
+    void remove_TaskAndEpic() {
+        taskManager.createTask(task);
+        taskManager.createEpic(epic);
+        taskManager.getTaskById(task.getId());
+        taskManager.getEpicById(epic.getId());
+        taskManager.delAll();
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления и задачи и эпика
+    }
+
+    @Test
+    void remove_TaskAndSubTaskFromHistory() {
+
+        historyManager.add(task);
+        historyManager.add(subTask);
+
+        historyManager.remove(subTask.getId());
+        historyManager.remove(task.getId());
+
+        final List<Task> history = historyManager.getHistory();
+        assertEquals(0, history.size()); // Проверка, что история пуста после удаления и задачи и подзадачи
     }
 }
