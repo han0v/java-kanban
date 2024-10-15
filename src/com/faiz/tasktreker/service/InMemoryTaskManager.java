@@ -176,21 +176,23 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setId(getNextUniqId());
         tasks.put(task.getId(), task);
         System.out.println("Задача с ID " + task.getId() + " добавлена.");
+        return task;
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         epic.setId(getNextUniqId());
         epics.put(epic.getId(), epic);
         System.out.println("Эпик с ID " + epic.getId() + " добавлен.");
+        return epic;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
+    public SubTask createSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getEpicId())) {
             subTask.setId(getNextUniqId());
             subTasks.put(subTask.getId(), subTask);
@@ -201,6 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Ошибка: Эпик с ID " + subTask.getEpicId() + " не найден.");
         }
+        return subTask;
     }
 
 

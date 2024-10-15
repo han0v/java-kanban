@@ -18,6 +18,10 @@ public class Task {
         return id;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -61,11 +65,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", status='" + status + '\'' +
-                ", description='" + description + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ",";
     }
+
+
 }

@@ -14,18 +14,18 @@ public class SubTask extends Task {
         return epicId;
     }
 
+    public TaskType getType() {
+        return TaskType.SUBTASK;
+    }
+
     public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "id=" + getId() +
-                ", status=" + getStatus() +
-                ", epicId=" + epicId +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                '}';
+        return getId() + "," + TaskType.SUBTASK + "," + getName() + "," + getStatus() + "," + getDescription() + ","
+                + epicId;
+
     }
 }
