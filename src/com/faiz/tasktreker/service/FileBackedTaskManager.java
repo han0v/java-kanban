@@ -1,10 +1,8 @@
 package com.faiz.tasktreker.service;
 
 
-import com.faiz.tasktreker.model.Epic;
-import com.faiz.tasktreker.model.SubTask;
-import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.model.TaskType;
+import com.faiz.tasktreker.exceptions.ManagerSaveException;
+import com.faiz.tasktreker.model.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,6 +13,7 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final String file;
+    private static final String HEADER = "id,type,name,status,description,epic";
 
     public FileBackedTaskManager(String filename) {
         super();
@@ -22,9 +21,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    public void save() {
+    private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write(HEADER);
             writer.newLine();
 
             for (Task task : super.getTasks()) {
@@ -59,21 +58,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         TaskType taskType = TaskType.valueOf(params[1]);
+        Status status = Status.valueOf(params[3]);
 
         switch (taskType) {
             case EPIC:
-                Epic epic = new Epic(params[4], params[2]);
+                Epic epic = new Epic(params[2], params[4]);
                 epic.setId(id);
+                epic.setStatus(status);
                 return epic;
 
             case SUBTASK:
-                SubTask subtask = new SubTask(params[4], params[2], Integer.parseInt(params[5])); // params[5] - ID эпика
+                SubTask subtask = new SubTask(params[2], params[4], Integer.parseInt(params[5]));
                 subtask.setId(id);
+                subtask.setStatus(status);
                 return subtask;
 
             case TASK:
-                Task task = new Task(params[4], params[2]);
+                Task task = new Task(params[2], params[4]);
                 task.setId(id);
+                task.setStatus(status);
                 return task;
 
             default:
@@ -88,14 +91,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> lines = Files.readAllLines(file.toPath());
 
             for (String line : lines) {
-                if (line.trim().isEmpty() || line.startsWith("id,type")) {
-                    continue;  // Пропускаем пустые строки и заголовок
+                if (line.trim().isEmpty() || line.startsWith(HEADER)) {
+                    continue;
                 }
 
                 try {
-                    // Теперь мы должны убедиться, что ID правильно извлекается
                     Task task = manager.fromString(line);
-                    manager.createTask(task); // Добавляем задачу, извлекшуюся из строки
+
+                    // Прямое добавление задач в зависимости от типа
+                    if (task instanceof Epic) {
+                        manager.epics.put(task.getId(), (Epic) task);
+                    } else if (task instanceof SubTask) {
+                        SubTask subTask = (SubTask) task;
+                        Epic epic = manager.epics.get(subTask.getEpicId());
+                        if (epic != null) {
+                            manager.subTasks.put(subTask.getId(), subTask);
+                            epic.createSubTask(subTask);
+                        }
+                    } else if (task instanceof Task) {
+                        manager.tasks.put(task.getId(), task);
+                    }
+
                 } catch (IllegalArgumentException e) {
                     System.out.println("Ошибка при восстановлении задачи: " + e.getMessage());
                 }
@@ -151,13 +167,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void delAllSubTasks() {
         super.delAllSubTasks();
         save();
-    }
-
-    @Override
-    public Task getById(int id) {
-        Task task = super.getTaskById(id);
-        save();
-        return task;
     }
 
     @Override

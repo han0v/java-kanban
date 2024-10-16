@@ -1,4 +1,4 @@
-package com.faiz.tasktreker.service;
+package com.faiz.tasktreker.exceptions;
 
 import java.io.IOException;
 
