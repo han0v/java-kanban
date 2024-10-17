@@ -18,6 +18,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public FileBackedTaskManager(String filename) {
         super();
         this.file = filename;
+        this.uniqId = 1;
     }
 
 
@@ -50,31 +51,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String value) {
         String[] params = value.split(",");
 
+        // Определяем индексы
+        final int ID_INDEX = 0;
+        final int TYPE_INDEX = 1;
+        final int NAME_INDEX = 2;
+        final int STATUS_INDEX = 3;
+        final int DESCRIPTION_INDEX = 4;
+        final int EPIC_INDEX = 5; // Для SubTask
+
         int id;
         try {
-            id = Integer.parseInt(params[0]);
+            id = Integer.parseInt(params[ID_INDEX]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("ID должен быть числом: " + params[0]);
+            throw new IllegalArgumentException("ID должен быть числом: " + params[ID_INDEX]);
         }
 
-        TaskType taskType = TaskType.valueOf(params[1]);
-        Status status = Status.valueOf(params[3]);
+        TaskType taskType = TaskType.valueOf(params[TYPE_INDEX]);
+        Status status = Status.valueOf(params[STATUS_INDEX]);
 
         switch (taskType) {
             case EPIC:
-                Epic epic = new Epic(params[2], params[4]);
+                Epic epic = new Epic(params[NAME_INDEX], params[DESCRIPTION_INDEX]);
                 epic.setId(id);
                 epic.setStatus(status);
                 return epic;
 
             case SUBTASK:
-                SubTask subtask = new SubTask(params[2], params[4], Integer.parseInt(params[5]));
+                SubTask subtask = new SubTask(params[NAME_INDEX], params[DESCRIPTION_INDEX], Integer.parseInt(params[EPIC_INDEX]));
                 subtask.setId(id);
                 subtask.setStatus(status);
                 return subtask;
 
             case TASK:
-                Task task = new Task(params[2], params[4]);
+                Task task = new Task(params[NAME_INDEX], params[DESCRIPTION_INDEX]);
                 task.setId(id);
                 task.setStatus(status);
                 return task;
@@ -89,6 +98,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
+            int maxId = 0;
 
             for (String line : lines) {
                 if (line.trim().isEmpty() || line.startsWith(HEADER)) {
@@ -97,29 +107,37 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 try {
                     Task task = manager.fromString(line);
-
-                    // Прямое добавление задач в зависимости от типа
-                    if (task instanceof Epic) {
-                        manager.epics.put(task.getId(), (Epic) task);
-                    } else if (task instanceof SubTask) {
-                        SubTask subTask = (SubTask) task;
-                        Epic epic = manager.epics.get(subTask.getEpicId());
-                        if (epic != null) {
-                            manager.subTasks.put(subTask.getId(), subTask);
-                            epic.createSubTask(subTask);
-                        }
-                    } else if (task instanceof Task) {
-                        manager.tasks.put(task.getId(), task);
+                    if (task.getId() > maxId) {
+                        maxId = task.getId();
                     }
 
+                    switch (task.getType()) {
+                        case EPIC:
+                            manager.epics.put(task.getId(), (Epic) task);
+                            break;
+                        case SUBTASK:
+                            SubTask subTask = (SubTask) task;
+                            Epic epic = manager.epics.get(subTask.getEpicId());
+                            if (epic != null) {
+                                manager.subTasks.put(subTask.getId(), subTask);
+                                epic.createSubTask(subTask);
+                            }
+                            break;
+                        case TASK:
+                            manager.tasks.put(task.getId(), task);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Неизвестный тип задачи: " + task.getType());
+                    }
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Ошибка при восстановлении задачи: " + e.getMessage());
+                    // Пробрасываем исключение выше
+                    throw new ManagerSaveException("Ошибка при восстановлении задачи: " + e.getMessage(), e);
                 }
             }
+            manager.uniqId = maxId + 1;
         } catch (IOException e) {
-            System.out.println("Ошибка при чтении файла: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка при чтении файла: " + file.getAbsolutePath(), e);
         }
-
         return manager;
     }
 

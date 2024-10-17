@@ -28,15 +28,20 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void testSaveAndLoadEmptyFile() {
+    public void testSaveAndLoadEmptyFile() throws IOException {
+        if (!tempFile.exists()) {
+            tempFile.createNewFile();
+        }
+
         // Загрузка из пустого файла
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
 
-        assertNotNull(loadedManager);
+        assertNotNull(loadedManager, "Загруженный менеджер не должен быть null");
         assertTrue(loadedManager.getTasks().isEmpty(), "Задачи должны быть пустыми");
         assertTrue(loadedManager.getSubTasks().isEmpty(), "Подзадачи должны быть пустыми");
         assertTrue(loadedManager.getEpics().isEmpty(), "Эпики должны быть пустыми");
     }
+
 
     @Test
     public void testSaveAndLoadTasks() throws IOException {

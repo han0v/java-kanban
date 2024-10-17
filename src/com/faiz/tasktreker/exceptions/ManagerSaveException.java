@@ -8,6 +8,11 @@ public class ManagerSaveException extends RuntimeException {
     }
 
     public ManagerSaveException(String message, IOException e) {
-        super(message);
+        super(message, e);
+    }
+
+    // Добавленный конструктор для IllegalArgumentException
+    public ManagerSaveException(String message, IllegalArgumentException e) {
+        super(message, e);
     }
 }
