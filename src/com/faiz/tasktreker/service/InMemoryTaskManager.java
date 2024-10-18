@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int uniqId = 1;
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+    protected int uniqId = 1;
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, SubTask> subTasks = new HashMap<>();
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -176,21 +176,23 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setId(getNextUniqId());
         tasks.put(task.getId(), task);
         System.out.println("Задача с ID " + task.getId() + " добавлена.");
+        return task;
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public Epic createEpic(Epic epic) {
         epic.setId(getNextUniqId());
         epics.put(epic.getId(), epic);
         System.out.println("Эпик с ID " + epic.getId() + " добавлен.");
+        return epic;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
+    public SubTask createSubTask(SubTask subTask) {
         if (epics.containsKey(subTask.getEpicId())) {
             subTask.setId(getNextUniqId());
             subTasks.put(subTask.getId(), subTask);
@@ -201,6 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Ошибка: Эпик с ID " + subTask.getEpicId() + " не найден.");
         }
+        return subTask;
     }
 
 
@@ -296,7 +299,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private int getNextUniqId() {
+    protected int getNextUniqId() {
         return uniqId++;
     }
 }

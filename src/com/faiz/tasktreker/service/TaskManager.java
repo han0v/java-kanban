@@ -30,11 +30,11 @@ public interface TaskManager {
 
     Task getById(int id);
 
-    void createTask(Task task);
+    Task createTask(Task task);
 
-    void createEpic(Epic epic);
+    Epic createEpic(Epic epic);
 
-    void createSubTask(SubTask subTask);
+    SubTask createSubTask(SubTask subTask);
 
     void updateTask(Task task);
 
