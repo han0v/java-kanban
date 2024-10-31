@@ -77,26 +77,26 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        Optional.of(tasks.isEmpty()).filter(e -> !e).ifPresent(e -> {
+        if (!tasks.isEmpty()) {
             tasks.keySet().forEach(taskId -> historyManager.remove(taskId));
             tasks.clear();
             System.out.println("Список задач очищен!");
-        });
+        }
 
-        Optional.of(epics.isEmpty()).filter(e -> !e).ifPresent(e -> {
+        if (!epics.isEmpty()) {
             epics.values().forEach(epic -> {
                 epic.getSubTaskList().values().forEach(subTask -> historyManager.remove(subTask.getId()));
                 historyManager.remove(epic.getId());
             });
             epics.clear();
             System.out.println("Список эпиков очищен!");
-        });
+        }
 
-        Optional.of(subTasks.isEmpty()).filter(e -> !e).ifPresent(e -> {
+        if (!subTasks.isEmpty()) {
             subTasks.keySet().forEach(subTaskId -> historyManager.remove(subTaskId));
             subTasks.clear();
             System.out.println("Список подзадач очищен!");
-        });
+        }
 
         prioritizedTasks.clear();
     }
@@ -294,24 +294,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<SubTask> getSubTaskList(int epicId) {
-        return Optional.ofNullable(epics.get(epicId))
-                .map(epic -> new ArrayList<>(epic.getSubTaskList().values()))
-                .orElse(null);
-    }
-
-    @Override
-    public Map<Integer, SubTask> getSubtasksMap() {
-        return subTasks;
-    }
-
-    @Override
-    public Map<Integer, Epic> getEpicsMap() {
-        return epics;
-    }
-
-    @Override
-    public Map<Integer, Task> getTaskMap() {
-        return tasks;
+        Epic epic = epics.get(epicId);
+        if (epic != null) {
+            return new ArrayList<>(epic.getSubTaskList().values());
+        }
+        return new ArrayList<>();
     }
 
 
@@ -320,31 +307,29 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    @Override
-    public Set<Task> getPrioritizedTasks() {
-        return prioritizedTasks;
+    private Set<Task> getPrioritizedTasks() {
+        return new HashSet<>(prioritizedTasks);
     }
 
-    @Override
-    public void setPrioritizedTasks(Task task) {
+    private void addToPrioritizedTasks(Task task) {
         prioritizedTasks.add(task);
     }
 
-
-    @Override
-    public void validation(Task task) {
+    private void validation(Task task) {
         if (task.getStartTime() == null || task.getEndTime() == null) {
-            throw new ValidationException("Время начала и окончания задачи должно быть задано.");
+            return;
         }
 
         for (Task existTask : prioritizedTasks) {
-            // Игнорируем саму задачу
             if (Objects.equals(task.getId(), existTask.getId())) {
                 continue;
             }
 
-            // Проверка пересечения временных периодов
-            if (existTask.getStartTime() != null && existTask.getEndTime() != null) {
+            if (existTask.getStartTime() == null) {
+                break;
+            }
+
+            if (existTask.getEndTime() != null) {
                 boolean isOverlapping =
                         (task.getStartTime().isBefore(existTask.getEndTime()) && task.getEndTime().isAfter(existTask.getStartTime()));
 

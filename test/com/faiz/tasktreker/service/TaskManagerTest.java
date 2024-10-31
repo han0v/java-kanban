@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,54 +22,52 @@ abstract class TaskManagersTest<T extends TaskManager> {
     protected SubTask subTask;
 
 
-//    @BeforeEach
-//    void beforeEach() { не работает, приходится создавать в каждом тесте в ручную, причину неисправности не понял
-//        task = new Task("Тестовое описание", "Тестовая задача", LocalDateTime.of(2024, 8, 10, 12, 0),
-//                Duration.ofMinutes(30));
-//        manager.createTask(task);
-//        epic = new Epic("Тестовый эпик", "Тестовое описание");
-//        manager.createEpic(epic);
-//        subTask = new SubTask("Тестовое описание", "Тестовая подзадача", epic.getId(),
-//                LocalDateTime.of(2024, 8, 10, 12, 0), Duration.ofMinutes(30));
-//        manager.createSubTask(subTask);
-//    }
-
     @Test
     void addNewEpic() {
         epic = new Epic("Тестовый эпик", "Тестовое описание");
         manager.createEpic(epic);
-        subTask = new SubTask("Тестовая задача", "Тестовое описание", epic.getId(),
+
+        subTask = new SubTask("Тестовая подзадача", "Тестовое описание", epic.getId(),
                 LocalDateTime.of(2024, 8, 10, 12, 0), Duration.ofMinutes(30));
         manager.createSubTask(subTask);
+
         final Epic savedEpic = manager.getEpicById(epic.getId());
         assertNotNull(savedEpic, "Эпик не найден.");
-        final Map<Integer, Epic> epics = manager.getEpicsMap();
+
+        List<Epic> epics = manager.getEpics();
         assertNotNull(epics, "Список пуст.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
+
+        assertEquals(epic, savedEpic, "Сохраненный эпик не совпадает с добавленным.");
     }
 
 
     @Test
     void addNewTask() {
-        task = new Task("Тестовая задача", "Тестовое описание", LocalDateTime.of(2024, 8, 10, 12, 0),
-                Duration.ofMinutes(30));
+        task = new Task("Тестовая задача", "Тестовое описание",
+                LocalDateTime.of(2024, 8, 10, 12, 0), Duration.ofMinutes(30));
         manager.createTask(task);
+
         final Task savedTask = manager.getTaskById(task.getId());
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не равны.");
-        final Map<Integer, Task> tasks = manager.getTaskMap();
+
+        List<Task> tasks = manager.getTasks();
         assertNotNull(tasks, "Список пуст.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.get(1), "Задачи не равны.");
+
+        // Изменяем индекс на 0 для получения первого элемента
+        assertEquals(task, tasks.get(0), "Задачи не равны.");
     }
 
 
     @Test
     void removeTaskPerId() {
         manager.createTask(task);
-        Map<Integer, Task> tasks = manager.getTaskMap();
+        List<Task> tasks = manager.getTasks();
         assertEquals(1, tasks.size());
         manager.delById(task.getId());
+        tasks = manager.getTasks();
         assertEquals(0, tasks.size(), "Задача не была удалена.");
     }
 
@@ -80,8 +78,8 @@ abstract class TaskManagersTest<T extends TaskManager> {
         subTask = new SubTask("Тестовая подзадача", "Тестовое описание", epic.getId(),
                 LocalDateTime.of(2024, 8, 10, 12, 0), Duration.ofMinutes(30));
         manager.createSubTask(subTask);
-        Map<Integer, SubTask> subtasks = manager.getSubtasksMap();
         manager.delById(subTask.getId());
+        List<SubTask> subtasks = manager.getSubTasks();
         assertEquals(0, subtasks.size(), "Подзадача не была удалена.");
     }
 
@@ -92,19 +90,32 @@ abstract class TaskManagersTest<T extends TaskManager> {
         subTask = new SubTask("Тестовая подзадача", "Тестовая описание", epic.getId(),
                 LocalDateTime.of(2024, 8, 10, 12, 0), Duration.ofMinutes(30));
         manager.createSubTask(subTask);
-        Map<Integer, Epic> epics = manager.getEpicsMap();
         manager.delById(epic.getId());
+        List<Epic> epics = manager.getEpics();
         assertEquals(0, epics.size(), "Эпик не был удален.");
     }
 
     @Test
     void updateTasks() {
         manager.createTask(task);
-        Map<Integer, Task> tasks = manager.getTaskMap();
-        assertEquals(task, tasks.get(task.getId()));
+
+        List<Task> tasks = manager.getTasks();
+
+        Task savedTask = tasks.stream()
+                .filter(t -> t.getId().equals(task.getId()))
+                .findFirst()
+                .orElse(null);
+        assertNotNull(savedTask, "Задача не найдена.");
+
         task.setStatus(Status.DONE);
         manager.updateTask(task);
-        assertEquals(task, tasks.get(task.getId()), "Задача не обновлена.");
+
+        Task updatedTask = tasks.stream()
+                .filter(t -> t.getId().equals(task.getId()))
+                .findFirst()
+                .orElse(null);
+        assertNotNull(updatedTask, "Обновленная задача не найдена.");
+        assertEquals(task, updatedTask, "Задача не обновлена.");
     }
 
 

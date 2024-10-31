@@ -9,16 +9,11 @@ import java.util.Objects;
 
 public class Epic extends Task {
     private final Map<Integer, SubTask> subTaskList;
-    private Duration duration;
-    private LocalDateTime startTime;
     private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
         subTaskList = new HashMap<>();
-        this.duration = Duration.ZERO;
-        this.startTime = null;
-        this.endTime = null;
     }
 
     public Epic(String name, String description, LocalDateTime startTime, Duration duration) {
@@ -66,17 +61,10 @@ public class Epic extends Task {
     }
 
     public void updateEpicData() {
-        if (subTaskList.isEmpty()) {
-            this.setStatus(Status.NEW);
-            this.startTime = null;
-            this.endTime = null;
-            this.duration = Duration.ZERO;
-            return;
-        }
 
         LocalDateTime earliestStart = null;
         LocalDateTime latestEnd = null;
-        Duration totalDuration = Duration.ZERO;
+        Duration totalDuration = null;
 
         for (SubTask sub : subTaskList.values()) {
             LocalDateTime subStart = sub.getStartTime();
@@ -94,17 +82,13 @@ public class Epic extends Task {
             totalDuration = totalDuration.plus(subDuration);
         }
 
-        this.startTime = earliestStart;
+        setStartTime(earliestStart);
         this.endTime = latestEnd;
-        this.duration = totalDuration;
+        setDuration(totalDuration);
     }
 
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public LocalDateTime getEndTime() {
@@ -113,27 +97,26 @@ public class Epic extends Task {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true; // Проверка на идентичность
-        if (!(o instanceof Epic)) return false; // Проверка на тип
-        if (!super.equals(o)) return false; // Проверка полей родительского класса
+        if (this == o) return true;
+        if (!(o instanceof Epic)) return false;
+        if (!super.equals(o)) return false;
 
         Epic epic = (Epic) o;
-        return Objects.equals(getId(), epic.getId()) &&  // Сравнение по уникальному идентификатору
-                Objects.equals(getName(), epic.getName()) && // Сравнение по имени
-                Objects.equals(getDescription(), epic.getDescription()) && // Сравнение по описанию
-                getStatus() == epic.getStatus(); // Сравнение по статусу
+        return Objects.equals(getId(), epic.getId()) &&
+                Objects.equals(getName(), epic.getName()) &&
+                Objects.equals(getDescription(), epic.getDescription()) &&
+                getStatus() == epic.getStatus();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getStatus()); // Генерация хэш-кода
+        return Objects.hash(getId(), getName(), getDescription(), getStatus());
     }
-
 
     @Override
     public String toString() {
         return getId() + "," + TaskType.EPIC + "," + getName() + "," + getStatus() + "," + getEpicId() + ","
-                + getDescription() + "," + startTime + "," + duration.toMinutes() + ",";
+                + getDescription() + "," + getStartTime() + "," + getDuration().toMinutes() + ",";
     }
 }
 

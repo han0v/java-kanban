@@ -4,10 +4,7 @@ import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface TaskManager {
     Task getTaskById(int id);
@@ -46,20 +43,9 @@ public interface TaskManager {
 
     void delById(int id);
 
-    ArrayList<SubTask> getSubTaskList(int epicId);
-
-    void validation(Task task);
+    List<SubTask> getSubTaskList(int epicId);
 
     List<Task> getHistory();
 
-    Set<Task> getPrioritizedTasks();
-
-    void setPrioritizedTasks(Task task);
-
-    Map<Integer, Task> getTaskMap();
-
-    Map<Integer, Epic> getEpicsMap();
-
-    Map<Integer, SubTask> getSubtasksMap();
 
 }

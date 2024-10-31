@@ -53,53 +53,54 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String value) {
         String[] params = value.split(",");
 
-        // Определяем индексы
-        final int ID_INDEX = 0;
-        final int TYPE_INDEX = 1;
-        final int NAME_INDEX = 2;
-        final int STATUS_INDEX = 3;
-        final int DESCRIPTION_INDEX = 4;
-        final int EPIC_INDEX = 5;
+        final int idIndex = 0;
+        final int typeIndex = 1;
+        final int nameIndex = 2;
+        final int statusIndex = 3;
+        final int descriptionIndex = 4;
+        final int epicIndex = 5;
+
 
         int id;
         try {
-            id = Integer.parseInt(params[ID_INDEX]);
+            id = Integer.parseInt(params[idIndex]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("ID должен быть числом: " + params[ID_INDEX]);
+            throw new IllegalArgumentException("ID должен быть числом: " + params[idIndex]);
         }
 
-        TaskType taskType = TaskType.valueOf(params[TYPE_INDEX]);
-        Status status = Status.valueOf(params[STATUS_INDEX]);
+        TaskType taskType = TaskType.valueOf(params[typeIndex]);
+        Status status = Status.valueOf(params[statusIndex]);
 
         LocalDateTime startTime = null;
-        Duration duration = null;
+        Duration duration = Duration.ZERO;
 
         // Проверка наличия значений для startTime и duration
-        if (params[6] != null && !params[6].isEmpty() && !params[6].equals("null")) {
+        if (!params[6].isEmpty()) {
             startTime = LocalDateTime.parse(params[6]);
         }
-        if (params[7] != null && !params[7].isEmpty() && !params[7].equals("null")) {
+        if (!params[7].isEmpty()) {
             duration = Duration.ofMinutes(Long.parseLong(params[7]));
         }
 
         switch (taskType) {
             case EPIC:
-                Epic epic = new Epic(params[NAME_INDEX], params[DESCRIPTION_INDEX]);
+                Epic epic = new Epic(params[nameIndex], params[descriptionIndex]);
                 epic.setId(id);
                 epic.setStatus(status);
                 epic.setStartTime(startTime); // Устанавливаем startTime, если он не null
                 epic.setDuration(duration); // Устанавливаем duration, если он не null
+                epic.setEndTime(epic.getEndTime());
                 return epic;
 
             case SUBTASK:
-                SubTask subtask = new SubTask(params[NAME_INDEX], params[DESCRIPTION_INDEX],
-                        Integer.parseInt(params[EPIC_INDEX]), startTime, duration);
+                SubTask subtask = new SubTask(params[nameIndex], params[descriptionIndex],
+                        Integer.parseInt(params[epicIndex]), startTime, duration);
                 subtask.setId(id);
                 subtask.setStatus(status);
                 return subtask;
 
             case TASK:
-                Task task = new Task(params[NAME_INDEX], params[DESCRIPTION_INDEX], startTime, duration);
+                Task task = new Task(params[nameIndex], params[descriptionIndex], startTime, duration);
                 task.setId(id);
                 task.setStatus(status);
                 return task;
