@@ -6,6 +6,9 @@ import com.faiz.tasktreker.model.Task;
 import com.faiz.tasktreker.service.Managers;
 import com.faiz.tasktreker.service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
@@ -23,9 +26,9 @@ public class Main {
 
 
         // Создание подзадач для первого эпика
-        SubTask sub1 = new SubTask("Собрать все коробки", "Да, да... Все коробочки!", epic1.getId());
-        SubTask sub2 = new SubTask("Упаковать кошку", "Прощаемся с кошкой!", epic1.getId());
-        SubTask sub3 = new SubTask("Сделать домашнее задание", "До воскресенья", epic1.getId());
+        SubTask sub1 = new SubTask("Собрать все коробки", "Да, да... Все коробочки!", epic1.getId(), LocalDateTime.now(), Duration.ZERO);
+        SubTask sub2 = new SubTask("Упаковать кошку", "Прощаемся с кошкой!", epic1.getId(), LocalDateTime.now(), Duration.ZERO);
+        SubTask sub3 = new SubTask("Сделать домашнее задание", "До воскресенья", epic1.getId(), LocalDateTime.now(), Duration.ZERO);
 
 
         taskManager.createSubTask(sub1);

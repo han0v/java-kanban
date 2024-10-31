@@ -9,11 +9,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final String file;
-    private static final String HEADER = "id,type,name,status,description,epic";
+    private static final String HEADER = "id,type,name,status,description,epic, starTime, duration";
 
     public FileBackedTaskManager(String filename) {
         super();
@@ -57,7 +59,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final int NAME_INDEX = 2;
         final int STATUS_INDEX = 3;
         final int DESCRIPTION_INDEX = 4;
-        final int EPIC_INDEX = 5; // Для SubTask
+        final int EPIC_INDEX = 5;
 
         int id;
         try {
@@ -69,21 +71,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         TaskType taskType = TaskType.valueOf(params[TYPE_INDEX]);
         Status status = Status.valueOf(params[STATUS_INDEX]);
 
+        LocalDateTime startTime = null;
+        Duration duration = null;
+
+        // Проверка наличия значений для startTime и duration
+        if (params[6] != null && !params[6].isEmpty() && !params[6].equals("null")) {
+            startTime = LocalDateTime.parse(params[6]);
+        }
+        if (params[7] != null && !params[7].isEmpty() && !params[7].equals("null")) {
+            duration = Duration.ofMinutes(Long.parseLong(params[7]));
+        }
+
         switch (taskType) {
             case EPIC:
                 Epic epic = new Epic(params[NAME_INDEX], params[DESCRIPTION_INDEX]);
                 epic.setId(id);
                 epic.setStatus(status);
+                epic.setStartTime(startTime); // Устанавливаем startTime, если он не null
+                epic.setDuration(duration); // Устанавливаем duration, если он не null
                 return epic;
 
             case SUBTASK:
-                SubTask subtask = new SubTask(params[NAME_INDEX], params[DESCRIPTION_INDEX], Integer.parseInt(params[EPIC_INDEX]));
+                SubTask subtask = new SubTask(params[NAME_INDEX], params[DESCRIPTION_INDEX],
+                        Integer.parseInt(params[EPIC_INDEX]), startTime, duration);
                 subtask.setId(id);
                 subtask.setStatus(status);
                 return subtask;
 
             case TASK:
-                Task task = new Task(params[NAME_INDEX], params[DESCRIPTION_INDEX]);
+                Task task = new Task(params[NAME_INDEX], params[DESCRIPTION_INDEX], startTime, duration);
                 task.setId(id);
                 task.setStatus(status);
                 return task;
@@ -92,6 +108,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 throw new IllegalArgumentException("Неизвестный тип задачи: " + taskType);
         }
     }
+
 
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file.getAbsolutePath());
@@ -204,4 +221,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.updateSubTask(subTask);
         save();
     }
+
+
 }

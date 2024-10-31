@@ -1,5 +1,7 @@
 package com.faiz.tasktreker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,11 +10,24 @@ public class Task {
     private Status status = Status.NEW;
     private String description;
     private String name;
+    private LocalDateTime startTime;
+    private Duration duration;
 
-    public Task(String name, String description) {
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
     }
+
+    public Task(String name, String description) {
+        this(name, description, LocalDateTime.now(), Duration.ZERO);
+    }
+
+    public LocalDateTime getEndTime(){
+        return (startTime != null && duration != null) ? startTime.plus(duration) : null;
+    }
+
 
     public Integer getId() {
         return id;
@@ -51,22 +66,44 @@ public class Task {
         this.description = description;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public Integer getEpicId() {
+        return null;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Task task)) return false;
-        return id == task.id;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(description, task.description) && Objects.equals(name, task.name) &&
+                status == task.status && Objects.equals(startTime, task.startTime) &&
+                Objects.equals(duration, task.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(description, id, name, status);
     }
 
     @Override
     public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ",";
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + "," + getEpicId() + "," +
+                startTime + "," + duration.toMinutes() + ",";
     }
-
-
 }
