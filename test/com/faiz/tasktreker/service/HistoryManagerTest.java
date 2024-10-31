@@ -99,7 +99,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void removeFromHead(){
+    void removeFromHead() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subTask);
@@ -110,7 +110,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void removeFromMiddle(){
+    void removeFromMiddle() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subTask);
@@ -121,7 +121,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    void removeFromTail(){
+    void removeFromTail() {
         historyManager.add(epic);
         historyManager.add(subTask);
         historyManager.add(task);

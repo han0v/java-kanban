@@ -356,8 +356,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-
-
     protected int getNextUniqId() {
         return uniqId++;
     }

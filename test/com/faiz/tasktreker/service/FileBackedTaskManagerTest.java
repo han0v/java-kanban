@@ -5,10 +5,10 @@ import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.time.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;

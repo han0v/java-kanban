@@ -2,14 +2,14 @@ package com.faiz.tasktreker.service;
 
 import com.faiz.tasktreker.exceptions.ValidationException;
 import com.faiz.tasktreker.model.Epic;
+import com.faiz.tasktreker.model.Status;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.model.Status;
 import org.junit.jupiter.api.Test;
-import java.util.Map;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
