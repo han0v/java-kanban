@@ -72,7 +72,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Status status = Status.valueOf(params[statusIndex]);
 
         LocalDateTime startTime = null;
-        Duration duration = Duration.ZERO;
+        Duration duration = null;
 
         // Проверка наличия значений для startTime и duration
         if (!params[6].isEmpty()) {
@@ -89,7 +89,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setStatus(status);
                 epic.setStartTime(startTime); // Устанавливаем startTime, если он не null
                 epic.setDuration(duration); // Устанавливаем duration, если он не null
-                epic.setEndTime(epic.getEndTime());
+                epic.setEndTime(null); // Изначально устанавливаем endTime как null
                 return epic;
 
             case SUBTASK:
@@ -129,6 +129,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         maxId = task.getId();
                     }
 
+                    manager.addToPrioritizedTasks(task);
+
                     switch (task.getType()) {
                         case EPIC:
                             manager.epics.put(task.getId(), (Epic) task);
@@ -153,6 +155,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
             manager.uniqId = maxId + 1;
+            //  логика по обновлению поля endTime для каждого эпика
+            for (Epic epic : manager.epics.values()) {
+                epic.updateEpicData();
+            }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при чтении файла: " + file.getAbsolutePath(), e);
         }

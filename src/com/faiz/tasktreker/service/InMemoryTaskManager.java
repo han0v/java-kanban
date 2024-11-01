@@ -311,7 +311,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new HashSet<>(prioritizedTasks);
     }
 
-    private void addToPrioritizedTasks(Task task) {
+    protected void addToPrioritizedTasks(Task task) {
         prioritizedTasks.add(task);
     }
 
@@ -326,19 +326,19 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
             if (existTask.getStartTime() == null) {
-                break;
+                continue;
             }
 
-            if (existTask.getEndTime() != null) {
-                boolean isOverlapping =
-                        (task.getStartTime().isBefore(existTask.getEndTime()) && task.getEndTime().isAfter(existTask.getStartTime()));
+            boolean doesNotOverlap =
+                    task.getEndTime().isBefore(existTask.getStartTime()) ||
+                            task.getStartTime().isAfter(existTask.getEndTime());
 
-                if (isOverlapping) {
-                    throw new ValidationException("Задача " + task + " пересекается с задачей " + existTask);
-                }
+            if (!doesNotOverlap) {
+                throw new ValidationException("Задача " + task + " пересекается с задачей " + existTask);
             }
         }
     }
+
 
 
     protected int getNextUniqId() {

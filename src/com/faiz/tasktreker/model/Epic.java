@@ -61,10 +61,9 @@ public class Epic extends Task {
     }
 
     public void updateEpicData() {
-
         LocalDateTime earliestStart = null;
         LocalDateTime latestEnd = null;
-        Duration totalDuration = null;
+        Duration totalDuration = null;  // Сначала totalDuration равен null
 
         for (SubTask sub : subTaskList.values()) {
             LocalDateTime subStart = sub.getStartTime();
@@ -79,13 +78,22 @@ public class Epic extends Task {
                 latestEnd = subEnd;
             }
 
-            totalDuration = totalDuration.plus(subDuration);
+            // Устанавливаем totalDuration с первого значения подзадачи
+            if (subDuration != null) {
+                if (totalDuration == null) {
+                    totalDuration = subDuration;  //значение на первое время
+                } else {
+                    totalDuration = totalDuration.plus(subDuration);  // Добавляем если уже инициализировано
+                }
+            }
         }
 
+        // Устанавливаем начальное время, конечное время и общую продолжительность
         setStartTime(earliestStart);
         this.endTime = latestEnd;
-        setDuration(totalDuration);
+        setDuration(totalDuration);  // totalDuration может быть null, если не было ни одной подзадачи с продолжительностью
     }
+
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
