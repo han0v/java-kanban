@@ -293,12 +293,12 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public ArrayList<SubTask> getSubTaskList(int epicId) {
+    public List<SubTask> getSubTaskList(int epicId) {
         Epic epic = epics.get(epicId);
         if (epic != null) {
             return new ArrayList<>(epic.getSubTaskList().values());
         }
-        return new ArrayList<>();
+        return List.of();
     }
 
 
@@ -308,7 +308,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private Set<Task> getPrioritizedTasks() {
-        return new HashSet<>(prioritizedTasks);
+        return new TreeSet<>(prioritizedTasks);
     }
 
     protected void addToPrioritizedTasks(Task task) {
@@ -326,12 +326,14 @@ public class InMemoryTaskManager implements TaskManager {
             }
 
             if (existTask.getStartTime() == null) {
-                continue;
+                return;
             }
 
             boolean doesNotOverlap =
                     task.getEndTime().isBefore(existTask.getStartTime()) ||
-                            task.getStartTime().isAfter(existTask.getEndTime());
+                            task.getStartTime().isAfter(existTask.getEndTime()) ||
+                            task.getEndTime().isEqual(existTask.getStartTime()) ||
+                            task.getStartTime().isEqual(existTask.getEndTime());
 
             if (!doesNotOverlap) {
                 throw new ValidationException("Задача " + task + " пересекается с задачей " + existTask);

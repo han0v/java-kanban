@@ -89,7 +89,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setStatus(status);
                 epic.setStartTime(startTime); // Устанавливаем startTime, если он не null
                 epic.setDuration(duration); // Устанавливаем duration, если он не null
-                epic.setEndTime(null); // Изначально устанавливаем endTime как null
                 return epic;
 
             case SUBTASK:
@@ -129,7 +128,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         maxId = task.getId();
                     }
 
-                    manager.addToPrioritizedTasks(task);
 
                     switch (task.getType()) {
                         case EPIC:
@@ -142,9 +140,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                                 manager.subTasks.put(subTask.getId(), subTask);
                                 epic.createSubTask(subTask);
                             }
+                            manager.addToPrioritizedTasks(subTask);
                             break;
                         case TASK:
                             manager.tasks.put(task.getId(), task);
+                            manager.addToPrioritizedTasks(task);
                             break;
                         default:
                             throw new IllegalArgumentException("Неизвестный тип задачи: " + task.getType());
