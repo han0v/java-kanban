@@ -6,6 +6,8 @@ import com.faiz.tasktreker.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +29,7 @@ class HistoryManagerTest {
         task.setId(1);
         epic = new Epic("Test description", "TestEpic");
         epic.setId(2);
-        subTask = new SubTask("Test description", "TestSubTask", 2);
+        subTask = new SubTask("Test description", "TestSubTask", 2, LocalDateTime.now(), Duration.ofMinutes(30));
         subTask.setId(3);
     }
 
@@ -95,4 +97,38 @@ class HistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
         assertEquals(0, history.size()); // Проверка, что история пуста после удаления и задачи и подзадачи
     }
+
+    @Test
+    void removeFromHead() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subTask);
+        historyManager.remove(task.getId());
+        final List<Task> history = historyManager.getHistory();
+        assertNotNull(history, "История пустая.");
+        assertEquals(2, history.size(), "Задача не удалена");
+    }
+
+    @Test
+    void removeFromMiddle() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subTask);
+        historyManager.remove(epic.getId());
+        final List<Task> history = historyManager.getHistory();
+        assertNotNull(history, "История пустая.");
+        assertEquals(2, history.size(), "Задача не удалена");
+    }
+
+    @Test
+    void removeFromTail() {
+        historyManager.add(epic);
+        historyManager.add(subTask);
+        historyManager.add(task);
+        historyManager.remove(task.getId());
+        final List<Task> history = historyManager.getHistory();
+        assertNotNull(history, "История пустая.");
+        assertEquals(2, history.size(), "Задача не удалена");
+    }
+
 }

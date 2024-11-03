@@ -4,7 +4,6 @@ import com.faiz.tasktreker.model.Epic;
 import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -44,8 +43,9 @@ public interface TaskManager {
 
     void delById(int id);
 
-    ArrayList<SubTask> getSubTaskList(int epicId);
-
+    List<SubTask> getSubTaskList(int epicId);
 
     List<Task> getHistory();
+
+
 }
