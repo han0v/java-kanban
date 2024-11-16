@@ -307,7 +307,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private Set<Task> getPrioritizedTasks() {
+    public Set<Task> getPrioritizedTasks() {
         return new TreeSet<>(prioritizedTasks);
     }
 
