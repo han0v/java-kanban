@@ -1,13 +1,10 @@
 package com.faiz.tasktreker.http;
 
-import com.faiz.tasktreker.service.HistoryManager;
-import com.faiz.tasktreker.service.Managers;
 import com.faiz.tasktreker.service.TaskManager;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
 
 public class HttpTaskServer {
 

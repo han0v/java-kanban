@@ -1,8 +1,6 @@
 package com.faiz.tasktreker.http;
 import com.faiz.tasktreker.adapters.DurationAdapter;
-import com.faiz.tasktreker.adapters.InstantAdapter;
 import com.faiz.tasktreker.adapters.LocalDateTimeAdapter;
-import com.faiz.tasktreker.service.Managers;
 import com.faiz.tasktreker.service.TaskManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

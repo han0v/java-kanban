@@ -1,7 +1,6 @@
 package com.faiz.tasktreker.http;
 
 import com.faiz.tasktreker.adapters.DurationAdapter;
-import com.faiz.tasktreker.adapters.InstantAdapter;
 import com.faiz.tasktreker.adapters.LocalDateTimeAdapter;
 import com.faiz.tasktreker.model.Task;
 import com.faiz.tasktreker.service.TaskManager;
@@ -29,7 +28,6 @@ public class HttpTaskManagerTasksTest {
     private TaskManager manager;
     private HttpTaskServer taskServer;
     private Gson gson;
-    HttpClient client;
     public static final String TASK_URL = "http://localhost:8080/tasks";
 
     public HttpTaskManagerTasksTest() throws IOException {
