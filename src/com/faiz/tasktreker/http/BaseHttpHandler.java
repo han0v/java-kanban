@@ -1,4 +1,5 @@
 package com.faiz.tasktreker.http;
+
 import com.faiz.tasktreker.adapters.DurationAdapter;
 import com.faiz.tasktreker.adapters.LocalDateTimeAdapter;
 import com.faiz.tasktreker.service.TaskManager;
@@ -12,12 +13,11 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class BaseHttpHandler implements HttpHandler {
     protected TaskManager taskManager;
-    protected final Gson gson =   new GsonBuilder()
+    protected final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
@@ -39,20 +39,25 @@ public class BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
     }
+
     protected void sendText(HttpExchange h, String text) throws IOException {
         sendResponse(h, 200, text);
     }
+
     protected void sendNotFound(HttpExchange h, String text) throws IOException {
         sendResponse(h, 404, text);
     }
+
     protected void sendHasInteractions(HttpExchange h, String text) throws IOException {
         sendResponse(h, 406, text);
     }
+
     protected void writers(HttpExchange httpExchange) throws IOException {
         try (OutputStream os = httpExchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }
+
     protected String readText(HttpExchange httpExchange) throws IOException {
         return new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
     }

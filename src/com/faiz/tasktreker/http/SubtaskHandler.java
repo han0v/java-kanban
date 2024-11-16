@@ -9,7 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.util.Optional;
 
-public class SubtaskHandler extends  BaseHttpHandler{
+public class SubtaskHandler extends BaseHttpHandler {
     public SubtaskHandler(TaskManager taskManager) {
         super(taskManager);
     }
@@ -62,7 +62,7 @@ public class SubtaskHandler extends  BaseHttpHandler{
     private void handlePost(HttpExchange httpExchange) throws IOException {
         String bodyRequest = readText(httpExchange);
         try {
-            SubTask subTask  = gson.fromJson(bodyRequest, SubTask.class);
+            SubTask subTask = gson.fromJson(bodyRequest, SubTask.class);
             Integer id = subTask.getId();
             if (id == null) {
                 taskManager.updateTask(subTask);

@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-public class PrioritizedHandler extends BaseHttpHandler{
+public class PrioritizedHandler extends BaseHttpHandler {
     public PrioritizedHandler(TaskManager taskManager) {
         super(taskManager);
     }

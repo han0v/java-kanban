@@ -3,12 +3,14 @@ package com.faiz.tasktreker.http;
 import com.faiz.tasktreker.adapters.DurationAdapter;
 import com.faiz.tasktreker.adapters.LocalDateTimeAdapter;
 import com.faiz.tasktreker.model.Task;
-import com.faiz.tasktreker.service.TaskManager;
 import com.faiz.tasktreker.service.InMemoryTaskManager;
+import com.faiz.tasktreker.service.TaskManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -33,7 +35,7 @@ public class HttpTaskManagerTasksTest {
     public HttpTaskManagerTasksTest() throws IOException {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
-        gson =   new GsonBuilder()
+        gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
                 .create();

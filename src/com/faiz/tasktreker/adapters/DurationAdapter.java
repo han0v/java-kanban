@@ -1,8 +1,7 @@
 package com.faiz.tasktreker.adapters;
 
 import com.google.gson.*;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonDeserializer;
+
 import java.lang.reflect.Type;
 import java.time.Duration;
 

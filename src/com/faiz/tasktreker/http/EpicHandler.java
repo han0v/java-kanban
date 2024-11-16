@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class EpicHandler extends BaseHttpHandler {
     public EpicHandler(TaskManager taskManager) {

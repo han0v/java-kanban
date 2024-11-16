@@ -41,12 +41,12 @@ public class TaskHandler extends BaseHttpHandler {
         if (query == null) {
             try {
                 System.out.println(taskManager.getTasks());
-            String jsonString = gson.toJson(taskManager.getTasks());
-            sendText(httpExchange, jsonString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            sendResponse(httpExchange, 500, "Ошибка при сериализации задач.");
-        }
+                String jsonString = gson.toJson(taskManager.getTasks());
+                sendText(httpExchange, jsonString);
+            } catch (Exception e) {
+                e.printStackTrace();
+                sendResponse(httpExchange, 500, "Ошибка при сериализации задач.");
+            }
         } else {
             try {
                 Integer id = Integer.parseInt(query.substring(query.indexOf("id=") + 3));

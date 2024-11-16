@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-public class HistoryHandler extends BaseHttpHandler{
+public class HistoryHandler extends BaseHttpHandler {
     public HistoryHandler(TaskManager managers) {
         super(managers);
     }

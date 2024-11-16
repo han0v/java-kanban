@@ -1,12 +1,10 @@
 package com.faiz.tasktreker.adapters;
 
 import com.google.gson.*;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonDeserializer;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.lang.reflect.Type;
 
 public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
