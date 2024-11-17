@@ -10,15 +10,16 @@ public class PrioritizedHandler extends BaseHttpHandler {
         super(taskManager);
     }
 
+    @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
 
-        switch (method) {
-            case "GET":
+        switch (Methods.valueOf(method)) {
+            case Methods.GET:
                 handleGet(httpExchange);
                 break;
             default:
-                sendNotFound(httpExchange, "Неподдерживаемый метод: " + method);
+                sendResponse(httpExchange, 405, "Неподдерживаемый метод: " + method);
                 break;
         }
     }

@@ -18,21 +18,21 @@ public class SubtaskHandler extends BaseHttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
 
-        switch (method) {
-            case "GET":
+        switch (Methods.valueOf(method)) {
+            case Methods.GET:
                 handleGet(httpExchange);
                 break;
 
-            case "POST":
+            case Methods.POST:
                 handlePost(httpExchange);
                 break;
 
-            case "DELETE":
+            case Methods.DELETE:
                 handleDelete(httpExchange);
                 break;
 
             default:
-                sendNotFound(httpExchange, "Неподдерживаемый метод: " + method);
+                sendResponse(httpExchange, 405, "Неподдерживаемый метод: " + method);
                 break;
         }
     }
@@ -61,6 +61,10 @@ public class SubtaskHandler extends BaseHttpHandler {
 
     private void handlePost(HttpExchange httpExchange) throws IOException {
         String bodyRequest = readText(httpExchange);
+        if (bodyRequest == null || bodyRequest.isEmpty()) {
+            sendResponse(httpExchange, 400, "Тело запроса не может быть пустым.");
+            return;
+        }
         try {
             SubTask subTask = gson.fromJson(bodyRequest, SubTask.class);
             Integer id = subTask.getId();
@@ -86,6 +90,10 @@ public class SubtaskHandler extends BaseHttpHandler {
 
     private void handleDelete(HttpExchange httpExchange) throws IOException {
         String query = httpExchange.getRequestURI().getQuery();
+        if (query == null || query.isEmpty()) {
+            sendResponse(httpExchange, 400, "Обязательный параметр id не может быть пустым.");
+            return;
+        }
         try {
             int id = Integer.parseInt(query.substring(query.indexOf("id=") + 3));
             taskManager.delById(id);

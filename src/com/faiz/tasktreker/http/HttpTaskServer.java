@@ -10,7 +10,7 @@ public class HttpTaskServer {
 
     private final HttpServer httpServer;
     private static final int PORT = 8080;
-    TaskManager taskManager;
+    private TaskManager taskManager;
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
