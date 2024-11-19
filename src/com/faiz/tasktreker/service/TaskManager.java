@@ -5,6 +5,7 @@ import com.faiz.tasktreker.model.SubTask;
 import com.faiz.tasktreker.model.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     Task getTaskById(int id);
@@ -47,5 +48,5 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-
+    Set<Task> getPrioritizedTasks();
 }

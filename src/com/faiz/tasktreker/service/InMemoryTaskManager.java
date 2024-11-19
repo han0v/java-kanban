@@ -307,7 +307,8 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private Set<Task> getPrioritizedTasks() {
+    @Override
+    public Set<Task> getPrioritizedTasks() {
         return new TreeSet<>(prioritizedTasks);
     }
 
@@ -340,7 +341,6 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
     }
-
 
 
     protected int getNextUniqId() {
